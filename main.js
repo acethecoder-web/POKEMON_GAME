@@ -20,7 +20,7 @@
 
     // this is used to display the opponents
 
-    const opponentIndices = [4, 40, 49, 95, 80];
+    const opponentIndices = [4, 40, 49, 94];
     const opponentSprites = [];
 
     opponentIndices.forEach((index, i) => {
@@ -109,8 +109,64 @@
             grid[oldIndex].removeChild(playerSprite);
             grid[playerIndex].appendChild(playerSprite);
         }
+        checkNearbyOpponent();
     });
 
-    if (playerIndex == 40) {
-        alert("your on index40");
+    // this is for the updating of the contents of the message box
+    // Opponent names (simple map)
+    function getOpponentData(tileNumber) {
+        if (tileNumber === 4) return {
+            name: "Renji",
+            record: "80 Wins, 10 Defeats"
+        };
+        if (tileNumber === 40) return {
+            name: "Haruko",
+            record: "60 Wins, 30 Defeats"
+        };
+        if (tileNumber === 49) return {
+            name: "Takeshi",
+            record: "53 Wins, 36 Defeats"
+        };
+        if (tileNumber === 94) return {
+            name: "Ayamitso",
+            record: "28 Wins, 13 Defeats"
+        };
+        return "";
     }
+
+    // Check if player is next to an opponent
+    function checkNearbyOpponent() {
+        // Get tiles next to the player
+        let nearbyTiles = [
+            playerIndex - 1, // left
+            playerIndex + 1, // right
+            playerIndex - 10, // up
+            playerIndex + 10 // down
+        ];
+
+        // Check if any opponent is in nearby tiles
+        let foundOpponent = null;
+        for (let i = 0; i < opponentIndices.length; i++) {
+            if (nearbyTiles.includes(opponentIndices[i])) {
+                foundOpponent = opponentIndices[i];
+                break;
+            }
+        }
+
+        // Show name in the message box
+
+        const nameBox = document.getElementById('name-container');
+        const recordBox = document.getElementById('records');
+
+        if (foundOpponent !== null) {
+            const data = getOpponentData(foundOpponent);
+            nameBox.textContent = data.name;
+            recordBox.textContent = data.record;
+        } else {
+            nameBox.textContent = ""; // Clear when no one is nearby
+            recordBox.textContent = "";
+        }
+    }
+
+
+    z
