@@ -1,0 +1,33 @@
+/*
+COLOR STANDARDS
+
+BASE COLOR: rgb(252, 63, 68)
+GRAY COLOR:rgb(169, 161, 177)
+DARK COLOR:rgb(78, 39, 40)
+
+*/
+
+@font-face {
+  font-family: pokemon;
+  src: url(./fonts/Pokemon\ Solid.ttf);
+}
+
+@font-face {
+  font-family: pokemon2;
+  src: url(./fonts/Pokemon\ Hollow.ttf);
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin-top: 70px;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url("./bg.jpg");
+  background-position: center;
+  background-size: cover;
+  height: 90vh;
+}
