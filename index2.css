@@ -30,8 +30,7 @@ body {
   background-position: center;
   background-size: cover;
   height: 90vh;
-  display: flex;
-  justify-content: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 /* THIS IS THE CODES FOR THE GRID MAP OF THE GAME */
@@ -41,7 +40,8 @@ body {
   display: grid;
   grid-template-columns: repeat(10, 48px);
   grid-template-rows: repeat(10, 48px);
-  /* gap: 1px; */
+  gap: 1px;
+  border: 5px solid black;
 }
 
 .tile {
@@ -59,6 +59,7 @@ body {
   top: 0;
   left: 0;
 }
+
 .opponent {
   width: 48px;
   height: 48px;
@@ -67,4 +68,41 @@ body {
   position: absolute;
   top: 0;
   left: 0;
+}
+
+.message-box {
+  width: 500px;
+  height: 100px;
+  background-color: white;
+  border: 5px solid black;
+  display: flex;
+  gap: 150px;
+}
+
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+}
+
+.response {
+  margin-top: 20px;
+}
+
+.content-1,
+.content-2 {
+  margin: 5px;
+}
+
+.name-container,
+.win-records,
+.defeat-records {
+  text-transform: uppercase;
+}
+
+.button {
+  padding: 5px;
+  border-radius: 10px;
+  font-weight: bold;
 }

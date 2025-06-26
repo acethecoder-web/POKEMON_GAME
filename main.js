@@ -66,8 +66,10 @@
             frame++;
             if (frame > maxframe) {
                 clearInterval(animationInterval);
+            } else {
+                playerSprite.style.backgroundImage = `url('./character_animation/idle/frame_1.png')`;
             }
-        }, 50);
+        }, 10);
     }
     // going down
     function changetodown() {
@@ -106,6 +108,9 @@
         if (oldIndex !== playerIndex) {
             grid[oldIndex].removeChild(playerSprite);
             grid[playerIndex].appendChild(playerSprite);
-            checkForNPC();
         }
     });
+
+    if (playerIndex == 40) {
+        alert("your on index40");
+    }
