@@ -41,7 +41,7 @@ body {
   display: grid;
   grid-template-columns: repeat(10, 48px);
   grid-template-rows: repeat(10, 48px);
-  gap: 1px;
+  /* gap: 1px; */
 }
 
 .tile {
@@ -51,6 +51,15 @@ body {
   position: relative;
 }
 .character {
+  width: 48px;
+  height: 48px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.opponent {
   width: 48px;
   height: 48px;
   background-size: contain;

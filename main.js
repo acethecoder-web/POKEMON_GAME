@@ -18,8 +18,21 @@
     playerSprite.style.backgroundImage = "url('./character_animation/idle/frame_1.png')";
     grid[playerIndex].appendChild(playerSprite);
 
-    // functions to animate the walking of my character
+    // this is used to display the opponents
 
+    const opponentIndices = [4, 40, 49, 95, 80];
+    const opponentSprites = [];
+
+    opponentIndices.forEach((index, i) => {
+        const opponent = document.createElement('div');
+        opponent.classList.add('opponent');
+        opponent.style.backgroundImage = `url('./opponent_${i}/frame_1.png')`;
+        opponent.dataset.id = `opponent-${i}`; // Optional: give each a unique ID
+        grid[index].appendChild(opponent);
+        opponentSprites.push(opponent); // Store for later use
+    });
+
+    // functions to animate the walking of my character
     // going right
     function changetoright() {
         let frame = 0;
