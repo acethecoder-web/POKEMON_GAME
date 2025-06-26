@@ -30,4 +30,49 @@ body {
   background-position: center;
   background-size: cover;
   height: 90vh;
+  display: flex;
+  justify-content: center;
 }
+
+/* THIS IS THE CODES FOR THE GRID MAP OF THE GAME */
+/* version 2  */
+
+#game-map {
+  display: grid;
+  grid-template-columns: repeat(10, 48px);
+  grid-template-rows: repeat(10, 48px);
+  gap: 1px;
+}
+
+.tile {
+  width: 48px;
+  height: 48px;
+  background: url("./TILES/Grass\ \(short\).png");
+  position: relative;
+}
+.character {
+  width: 48px;
+  height: 48px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* this is the controller of the character */
+
+document.addEventListener('keydown', (e) => {
+  const oldIndex = playerIndex;
+  if (e.key === 'ArrowRight' && (playerIndex + 1) % 10 !== 0) playerIndex++;
+  if (e.key === 'ArrowLeft' && playerIndex % 10 !== 0) playerIndex--;
+  if (e.key === 'ArrowUp' && playerIndex >= 10) playerIndex -= 10;
+  if (e.key === 'ArrowDown' && playerIndex < 90) playerIndex += 10;
+
+  // Move sprite to new tile
+  if (oldIndex !== playerIndex) {
+    grid[oldIndex].removeChild(playerSprite);
+    grid[playerIndex].appendChild(playerSprite);
+    checkForNPC();
+  }
+});
