@@ -47,7 +47,7 @@ body {
 .tile {
   width: 48px;
   height: 48px;
-  background: url("./TILES/Grass\ \(short\).png");
+  background: url("./TILES/grass-short.png");
   position: relative;
 }
 .character {
@@ -59,20 +59,3 @@ body {
   top: 0;
   left: 0;
 }
-
-/* this is the controller of the character */
-
-document.addEventListener('keydown', (e) => {
-  const oldIndex = playerIndex;
-  if (e.key === 'ArrowRight' && (playerIndex + 1) % 10 !== 0) playerIndex++;
-  if (e.key === 'ArrowLeft' && playerIndex % 10 !== 0) playerIndex--;
-  if (e.key === 'ArrowUp' && playerIndex >= 10) playerIndex -= 10;
-  if (e.key === 'ArrowDown' && playerIndex < 90) playerIndex += 10;
-
-  // Move sprite to new tile
-  if (oldIndex !== playerIndex) {
-    grid[oldIndex].removeChild(playerSprite);
-    grid[playerIndex].appendChild(playerSprite);
-    checkForNPC();
-  }
-});
