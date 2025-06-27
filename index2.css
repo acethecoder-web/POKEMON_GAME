@@ -99,8 +99,13 @@ body {
 #fight {
   padding: 5px;
   font-weight: bold;
+  border-radius: 8px;
+  transition-duration: 0.2s;
 }
-
+#fight:hover {
+  background-color: red;
+  color: white;
+}
 .back {
   padding: 5px;
   border-radius: 5px;

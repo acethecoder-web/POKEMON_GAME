@@ -191,6 +191,4 @@
     window.onload = function () {
         // Play music
         document.getElementById('music').play();
-
-
     }
