@@ -50,6 +50,7 @@ body {
   background: url("./TILES/grass-short.png");
   position: relative;
 }
+
 .character {
   width: 48px;
   height: 48px;
@@ -76,7 +77,7 @@ body {
   background-color: white;
   border: 5px solid black;
   display: flex;
-  gap: 150px;
+  gap: 40px;
   justify-content: center;
   align-items: center;
   padding: 10px;
@@ -95,8 +96,15 @@ body {
   margin-top: 20px;
 }
 
-.button {
+#fight {
   padding: 5px;
-  border-radius: 10px;
   font-weight: bold;
+}
+
+.back {
+  padding: 5px;
+  border-radius: 5px;
+  transform: translate(20px, -40px);
+  font-weight: bold;
+  font-size: 20px;
 }

@@ -57,7 +57,7 @@
             }
         }, 50);
     }
-    // going up
+    // going up 
     function changetoup() {
         let frame = 0;
         const maxframe = 11;
@@ -74,7 +74,7 @@
     // going down
     function changetodown() {
         let frame = 0;
-        const maxframe = 11;
+        const maxframe = 12;
         const animationInterval = setInterval(() => {
             playerSprite.style.backgroundImage = `url('./character_animation/animation_down/frame_${frame}.png')`;
             frame++;
@@ -87,29 +87,36 @@
     /* this is the controller of the character */
     document.addEventListener('keydown', (e) => {
         const oldIndex = playerIndex;
-        if (e.key === 'ArrowRight' && (playerIndex + 1) % 10 !== 0) {
-            playerIndex++
-            changetoright();
-        };
-        if (e.key === 'ArrowLeft' && playerIndex % 10 !== 0) {
-            playerIndex--
-            changetoleft();
-        };
-        if (e.key === 'ArrowUp' && playerIndex >= 10) {
-            playerIndex -= 10
-            changetoup();
-        };
-        if (e.key === 'ArrowDown' && playerIndex < 90) {
-            playerIndex += 10
-            changetodown()
-        };
+        let newIndex = playerIndex;
 
-        // Move sprite to next tile
-        if (oldIndex !== playerIndex) {
+        if (e.key === 'ArrowRight' && (playerIndex + 1) % 10 !== 0) {
+            newIndex++;
+        } else if (e.key === 'ArrowLeft' && playerIndex % 10 !== 0) {
+            newIndex--;
+        } else if (e.key === 'ArrowUp' && playerIndex >= 10) {
+            newIndex -= 10;
+        } else if (e.key === 'ArrowDown' && playerIndex < 90) {
+            newIndex += 10;
+        }
+
+        // Don't move if newIndex is in a forbidden tile
+        if (opponentIndices.includes(newIndex)) return;
+
+        // If it's a valid new position, move and animate
+        if (newIndex !== playerIndex) {
+            playerIndex = newIndex;
+
+            // Animation based on key
+            if (e.key === 'ArrowRight') changetoright();
+            else if (e.key === 'ArrowLeft') changetoleft();
+            else if (e.key === 'ArrowUp') changetoup();
+            else if (e.key === 'ArrowDown') changetodown();
+
             grid[oldIndex].removeChild(playerSprite);
             grid[playerIndex].appendChild(playerSprite);
+
+            checkNearbyOpponent();
         }
-        checkNearbyOpponent();
     });
 
     // this is for the updating of the contents of the message box
@@ -117,21 +124,29 @@
     function getOpponentData(tileNumber) {
         if (tileNumber === 4) return {
             name: "Renji",
-            record: "80 Wins, 10 Defeats"
+            record: "80 Wins, 10 Defeats",
+            fight: "FIGHT"
         };
         if (tileNumber === 40) return {
             name: "Haruko",
-            record: "60 Wins, 30 Defeats"
+            record: "60 Wins, 30 Defeats",
+            fight: "FIGHT"
         };
         if (tileNumber === 49) return {
             name: "Takeshi",
-            record: "53 Wins, 36 Defeats"
+            record: "53 Wins, 36 Defeats",
+            fight: "FIGHT"
         };
         if (tileNumber === 94) return {
             name: "Ayamitso",
-            record: "28 Wins, 13 Defeats"
+            record: "28 Wins, 13 Defeats",
+            fight: "FIGHT"
         };
-        return "";
+        return {
+            name: "",
+            record: "",
+            fight: ""
+        };
     }
 
     // Check if player is next to an opponent
@@ -146,6 +161,7 @@
 
         // Check if any opponent is in nearby tiles
         let foundOpponent = null;
+
         for (let i = 0; i < opponentIndices.length; i++) {
             if (nearbyTiles.includes(opponentIndices[i])) {
                 foundOpponent = opponentIndices[i];
@@ -153,20 +169,28 @@
             }
         }
 
-        // Show name in the message box
-
+        // Show inforamation in the message box
         const nameBox = document.getElementById('name-container');
         const recordBox = document.getElementById('records');
+        const fightBox = document.getElementById('fight');
 
         if (foundOpponent !== null) {
             const data = getOpponentData(foundOpponent);
             nameBox.textContent = data.name;
             recordBox.textContent = data.record;
+            fightBox.textContent = data.fight;
+
         } else {
             nameBox.textContent = ""; // Clear when no one is nearby
             recordBox.textContent = "";
+            fightBox.textContent = "";
         }
     }
 
+    // music and sound fx sectionsss 
+    window.onload = function () {
+        // Play music
+        document.getElementById('music').play();
 
-    z
+
+    }
