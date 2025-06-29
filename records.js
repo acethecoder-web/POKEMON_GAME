@@ -99,3 +99,14 @@ function updateRecords(result) {
   localStorage.setItem(opponentKey, JSON.stringify(opponentRecord));
   localStorage.setItem("myRecord", JSON.stringify(myRecord));
 }
+
+function resetTournament() {
+  const opponents = ["Renji", "Haruko", "Takeshi", "Ayamitso"];
+  opponents.forEach((name) => {
+    localStorage.removeItem(`record_${name}`);
+  });
+  localStorage.removeItem("myRecord");
+  localStorage.removeItem("foughtOpponents");
+  localStorage.removeItem("tournamentFinished");
+  window.location.href = "index2.html";
+}

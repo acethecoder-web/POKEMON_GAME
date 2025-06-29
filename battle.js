@@ -103,12 +103,17 @@ function updateRecords(result) {
   } else if (result === "loss") {
     myRecord.losses += 1;
     opponentRecord.wins += 1;
-  } else if (result === "draw") {
-    // If you want to track draws separately, you can add a "draws" field
   }
 
   localStorage.setItem(opponentKey, JSON.stringify(opponentRecord));
   localStorage.setItem("myRecord", JSON.stringify(myRecord));
+
+  // ⬇️ Save to list of fought opponents
+  let foughtList = JSON.parse(localStorage.getItem("foughtOpponents")) || [];
+  if (!foughtList.includes(opponentName)) {
+    foughtList.push(opponentName);
+  }
+  localStorage.setItem("foughtOpponents", JSON.stringify(foughtList));
 }
 
 function endBattle() {
@@ -119,4 +124,47 @@ function endBattle() {
   setTimeout(() => {
     window.location.href = "index2.html";
   }, 2000);
+}
+
+// tourna logic
+const allOpponents = ["Renji", "Haruko", "Takeshi", "Ayamitso"];
+
+function simulateOpponentBattles() {
+  for (let i = 0; i < allOpponents.length; i++) {
+    for (let j = i + 1; j < allOpponents.length; j++) {
+      const opponentA = allOpponents[i];
+      const opponentB = allOpponents[j];
+
+      const winner = Math.random() < 0.5 ? opponentA : opponentB;
+      const loser = winner === opponentA ? opponentB : opponentA;
+
+      updateOpponentRecords(winner, loser);
+    }
+  }
+}
+
+function updateOpponentRecords(winner, loser) {
+  const winnerKey = `record_${winner}`;
+  const loserKey = `record_${loser}`;
+
+  let winnerRecord = JSON.parse(localStorage.getItem(winnerKey)) || {
+    wins: 0,
+    losses: 0,
+  };
+  let loserRecord = JSON.parse(localStorage.getItem(loserKey)) || {
+    wins: 0,
+    losses: 0,
+  };
+
+  winnerRecord.wins += 1;
+  loserRecord.losses += 1;
+
+  localStorage.setItem(winnerKey, JSON.stringify(winnerRecord));
+  localStorage.setItem(loserKey, JSON.stringify(loserRecord));
+}
+
+// Run simulation only once
+if (!localStorage.getItem("opponentBattlesSimulated")) {
+  simulateOpponentBattles();
+  localStorage.setItem("opponentBattlesSimulated", "true");
 }

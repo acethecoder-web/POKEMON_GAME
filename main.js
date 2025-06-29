@@ -223,3 +223,50 @@ fightBox.addEventListener("click", () => {
     window.location.href = "battle.html";
   }
 });
+
+function finishTournament() {
+  const opponents = ["Renji", "Haruko", "Takeshi", "Ayamitso"];
+  const foughtList = JSON.parse(localStorage.getItem("foughtOpponents")) || [];
+
+  // Filter out the ones you already fought (Ace fights)
+  const remainingOpponents = opponents;
+
+  // Run round robin simulation among opponents only
+  for (let i = 0; i < remainingOpponents.length; i++) {
+    for (let j = i + 1; j < remainingOpponents.length; j++) {
+      const oppA = remainingOpponents[i];
+      const oppB = remainingOpponents[j];
+
+      const winner = Math.random() < 0.5 ? oppA : oppB;
+      const loser = winner === oppA ? oppB : oppA;
+
+      updateOpponentRecords(winner, loser);
+    }
+  }
+
+  // Mark tournament as done
+  localStorage.setItem("tournamentFinished", "true");
+
+  // Redirect to records page
+  window.location.href = "records.html";
+}
+
+function updateOpponentRecords(winner, loser) {
+  const winnerKey = `record_${winner}`;
+  const loserKey = `record_${loser}`;
+
+  let winnerRecord = JSON.parse(localStorage.getItem(winnerKey)) || {
+    wins: 0,
+    losses: 0,
+  };
+  let loserRecord = JSON.parse(localStorage.getItem(loserKey)) || {
+    wins: 0,
+    losses: 0,
+  };
+
+  winnerRecord.wins += 1;
+  loserRecord.losses += 1;
+
+  localStorage.setItem(winnerKey, JSON.stringify(winnerRecord));
+  localStorage.setItem(loserKey, JSON.stringify(loserRecord));
+}

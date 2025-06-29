@@ -68,7 +68,14 @@
 
     <a href="index2.html">Back to Map</a>
 
+    <button onclick="resetTournament()">Reset Tournament</button>
+
     <script>
+      if (!localStorage.getItem("tournamentFinished")) {
+        alert("Tournament is not finished yet! Please finish it first.");
+        window.location.href = "index2.html";
+      }
+
       const opponents = ["Renji", "Haruko", "Takeshi", "Ayamitso"];
       const players = [...opponents, "Ace"];
 
