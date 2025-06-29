@@ -1,194 +1,225 @@
-    /* these are the codes to create the tile maps */
+/* these are the codes to create the tile maps */
+const map = document.getElementById("game-map");
+const grid = [];
+const MAP_SIZE = 100;
 
-    const map = document.getElementById('game-map');
-    const grid = [];
-    const MAP_SIZE = 100;
+for (let i = 0; i < MAP_SIZE; i++) {
+  const tile = document.createElement("div");
+  tile.classList.add("tile");
+  map.appendChild(tile);
+  grid.push(tile);
+}
 
-    for (let i = 0; i < MAP_SIZE; i++) {
-        const tile = document.createElement('div');
-        tile.classList.add('tile');
-        map.appendChild(tile);
-        grid.push(tile);
+// display my player at the box 1
+let playerIndex = 44;
+const playerSprite = document.createElement("div");
+playerSprite.classList.add("character");
+playerSprite.style.backgroundImage =
+  "url('./character_animation/idle/frame_1.png')";
+grid[playerIndex].appendChild(playerSprite);
+
+// this is used to display the opponents
+const opponentIndices = [4, 40, 49, 94];
+const opponentSprites = [];
+
+opponentIndices.forEach((index, i) => {
+  const opponent = document.createElement("div");
+  opponent.classList.add("opponent");
+  opponent.style.backgroundImage = `url('./opponent_${i}/frame_1.png')`;
+  opponent.dataset.id = `opponent-${i}`; // Optional: give each a unique ID
+  grid[index].appendChild(opponent);
+  opponentSprites.push(opponent); // Store for later use
+});
+
+// functions to animate the walking of my character
+
+// going right
+function changetoright() {
+  let frame = 0;
+  const maxframe = 11;
+  const animationInterval = setInterval(() => {
+    playerSprite.style.backgroundImage = `url('./character_animation/animation_right/frame_${frame}.png')`;
+    frame++;
+    if (frame > maxframe) {
+      clearInterval(animationInterval);
     }
+  }, 50);
+}
 
-    // display my player at the box 1
-    let playerIndex = 44;
-    const playerSprite = document.createElement('div');
-    playerSprite.classList.add('character');
-    playerSprite.style.backgroundImage = "url('./character_animation/idle/frame_1.png')";
+// going left
+function changetoleft() {
+  let frame = 0;
+  const maxframe = 11;
+  const animationInterval = setInterval(() => {
+    playerSprite.style.backgroundImage = `url('./character_animation/animation_left/frame_${frame}.png')`;
+    frame++;
+    if (frame > maxframe) {
+      clearInterval(animationInterval);
+    }
+  }, 50);
+}
+
+// going up
+function changetoup() {
+  let frame = 0;
+  const maxframe = 11;
+  const animationInterval = setInterval(() => {
+    playerSprite.style.backgroundImage = `url('./character_animation/animation_up/frame_${frame}.png')`;
+    frame++;
+    if (frame > maxframe) {
+      clearInterval(animationInterval);
+    } else {
+      playerSprite.style.backgroundImage = `url('./character_animation/idle/frame_1.png')`;
+    }
+  }, 10);
+}
+
+// going down
+function changetodown() {
+  let frame = 0;
+  const maxframe = 12;
+  const animationInterval = setInterval(() => {
+    playerSprite.style.backgroundImage = `url('./character_animation/animation_down/frame_${frame}.png')`;
+    frame++;
+    if (frame > maxframe) {
+      clearInterval(animationInterval);
+    }
+  }, 50);
+}
+
+/* this is the controller of the character */
+document.addEventListener("keydown", (e) => {
+  const oldIndex = playerIndex;
+  let newIndex = playerIndex;
+
+  if (e.key === "ArrowRight" && (playerIndex + 1) % 10 !== 0) {
+    newIndex++;
+  } else if (e.key === "ArrowLeft" && playerIndex % 10 !== 0) {
+    newIndex--;
+  } else if (e.key === "ArrowUp" && playerIndex >= 10) {
+    newIndex -= 10;
+  } else if (e.key === "ArrowDown" && playerIndex < 90) {
+    newIndex += 10;
+  }
+
+  // Don't move if newIndex is in a forbidden tile
+  if (opponentIndices.includes(newIndex)) return;
+
+  // If it's a valid new position, move and animate
+  if (newIndex !== playerIndex) {
+    playerIndex = newIndex;
+
+    // Animation based on key
+    if (e.key === "ArrowRight") changetoright();
+    else if (e.key === "ArrowLeft") changetoleft();
+    else if (e.key === "ArrowUp") changetoup();
+    else if (e.key === "ArrowDown") changetodown();
+
+    grid[oldIndex].removeChild(playerSprite);
     grid[playerIndex].appendChild(playerSprite);
 
-    // this is used to display the opponents
+    checkNearbyOpponent();
+  }
+});
 
-    const opponentIndices = [4, 40, 49, 94];
-    const opponentSprites = [];
+// this is for the updating of the contents of the message box
+// Opponent names (simple map)
+function getOpponentData(tileNumber) {
+  if (tileNumber === 4)
+    return {
+      name: "Renji",
+      record: "80 Wins, 10 Defeats",
+      fight: "FIGHT",
+    };
+  if (tileNumber === 40)
+    return {
+      name: "Haruko",
+      record: "60 Wins, 30 Defeats",
+      fight: "FIGHT",
+    };
+  if (tileNumber === 49)
+    return {
+      name: "Takeshi",
+      record: "53 Wins, 36 Defeats",
+      fight: "FIGHT",
+    };
+  if (tileNumber === 94)
+    return {
+      name: "Ayamitso",
+      record: "28 Wins, 13 Defeats",
+      fight: "FIGHT",
+    };
+  return {
+    name: "",
+    record: "",
+    fight: "",
+  };
+}
 
-    opponentIndices.forEach((index, i) => {
-        const opponent = document.createElement('div');
-        opponent.classList.add('opponent');
-        opponent.style.backgroundImage = `url('./opponent_${i}/frame_1.png')`;
-        opponent.dataset.id = `opponent-${i}`; // Optional: give each a unique ID
-        grid[index].appendChild(opponent);
-        opponentSprites.push(opponent); // Store for later use
-    });
+// Check if player is next to an opponent
+function checkNearbyOpponent() {
+  // Get tiles next to the player
+  let nearbyTiles = [
+    playerIndex - 1, // left
+    playerIndex + 1, // right
+    playerIndex - 10, // up
+    playerIndex + 10, // down
+  ];
 
-    // functions to animate the walking of my character
-    // going right
-    function changetoright() {
-        let frame = 0;
-        const maxframe = 11;
-        const animationInterval = setInterval(() => {
-            playerSprite.style.backgroundImage = `url('./character_animation/animation_right/frame_${frame}.png')`;
-            frame++;
-            if (frame > maxframe) {
-                clearInterval(animationInterval);
-            }
-        }, 50);
+  // Check if any opponent is in nearby tiles
+  let foundOpponent = null;
+
+  for (let i = 0; i < opponentIndices.length; i++) {
+    if (nearbyTiles.includes(opponentIndices[i])) {
+      foundOpponent = opponentIndices[i];
+      break;
     }
-    // going left
-    function changetoleft() {
-        let frame = 0;
-        const maxframe = 11;
-        const animationInterval = setInterval(() => {
-            playerSprite.style.backgroundImage = `url('./character_animation/animation_left/frame_${frame}.png')`;
-            frame++;
-            if (frame > maxframe) {
-                clearInterval(animationInterval);
-            }
-        }, 50);
-    }
-    // going up 
-    function changetoup() {
-        let frame = 0;
-        const maxframe = 11;
-        const animationInterval = setInterval(() => {
-            playerSprite.style.backgroundImage = `url('./character_animation/animation_up/frame_${frame}.png')`;
-            frame++;
-            if (frame > maxframe) {
-                clearInterval(animationInterval);
-            } else {
-                playerSprite.style.backgroundImage = `url('./character_animation/idle/frame_1.png')`;
-            }
-        }, 10);
-    }
-    // going down
-    function changetodown() {
-        let frame = 0;
-        const maxframe = 12;
-        const animationInterval = setInterval(() => {
-            playerSprite.style.backgroundImage = `url('./character_animation/animation_down/frame_${frame}.png')`;
-            frame++;
-            if (frame > maxframe) {
-                clearInterval(animationInterval);
-            }
-        }, 50);
-    }
+  }
 
-    /* this is the controller of the character */
-    document.addEventListener('keydown', (e) => {
-        const oldIndex = playerIndex;
-        let newIndex = playerIndex;
+  // Show inforamation in the message box
+  const nameBox = document.getElementById("name-container");
+  const recordBox = document.getElementById("records");
+  const fightBox = document.getElementById("fight");
 
-        if (e.key === 'ArrowRight' && (playerIndex + 1) % 10 !== 0) {
-            newIndex++;
-        } else if (e.key === 'ArrowLeft' && playerIndex % 10 !== 0) {
-            newIndex--;
-        } else if (e.key === 'ArrowUp' && playerIndex >= 10) {
-            newIndex -= 10;
-        } else if (e.key === 'ArrowDown' && playerIndex < 90) {
-            newIndex += 10;
-        }
+  if (foundOpponent !== null) {
+    const data = getOpponentData(foundOpponent);
+    nameBox.textContent = data.name;
+    recordBox.textContent = data.record;
+    fightBox.textContent = data.fight;
+  } else {
+    nameBox.textContent = ""; // Clear when no one is nearby
+    recordBox.textContent = "";
+    fightBox.textContent = "";
+  }
+}
 
-        // Don't move if newIndex is in a forbidden tile
-        if (opponentIndices.includes(newIndex)) return;
+// music and sound fx sectionsss
+window.onload = function () {
+  // Play music
+  document.getElementById("music").play();
+};
 
-        // If it's a valid new position, move and animate
-        if (newIndex !== playerIndex) {
-            playerIndex = newIndex;
+// saving of partner pokemon sa local storage
 
-            // Animation based on key
-            if (e.key === 'ArrowRight') changetoright();
-            else if (e.key === 'ArrowLeft') changetoleft();
-            else if (e.key === 'ArrowUp') changetoup();
-            else if (e.key === 'ArrowDown') changetodown();
+function selectPokemonAndNavigate(event, imagePath) {
+  event.preventDefault(); // prevent immediate navigation
 
-            grid[oldIndex].removeChild(playerSprite);
-            grid[playerIndex].appendChild(playerSprite);
+  localStorage.setItem("selectedPokemon", imagePath);
 
-            checkNearbyOpponent();
-        }
-    });
+  // then navigate manually
+  window.location.href = "./index2.html";
+}
 
-    // this is for the updating of the contents of the message box
-    // Opponent names (simple map)
-    function getOpponentData(tileNumber) {
-        if (tileNumber === 4) return {
-            name: "Renji",
-            record: "80 Wins, 10 Defeats",
-            fight: "FIGHT"
-        };
-        if (tileNumber === 40) return {
-            name: "Haruko",
-            record: "60 Wins, 30 Defeats",
-            fight: "FIGHT"
-        };
-        if (tileNumber === 49) return {
-            name: "Takeshi",
-            record: "53 Wins, 36 Defeats",
-            fight: "FIGHT"
-        };
-        if (tileNumber === 94) return {
-            name: "Ayamitso",
-            record: "28 Wins, 13 Defeats",
-            fight: "FIGHT"
-        };
-        return {
-            name: "",
-            record: "",
-            fight: ""
-        };
-    }
+// Add click event to fight box
+const fightBox = document.getElementById("fight");
 
-    // Check if player is next to an opponent
-    function checkNearbyOpponent() {
-        // Get tiles next to the player
-        let nearbyTiles = [
-            playerIndex - 1, // left
-            playerIndex + 1, // right
-            playerIndex - 10, // up
-            playerIndex + 10 // down
-        ];
+fightBox.addEventListener("click", () => {
+  const nameBox = document.getElementById("name-container");
+  const opponentName = nameBox.textContent;
 
-        // Check if any opponent is in nearby tiles
-        let foundOpponent = null;
-
-        for (let i = 0; i < opponentIndices.length; i++) {
-            if (nearbyTiles.includes(opponentIndices[i])) {
-                foundOpponent = opponentIndices[i];
-                break;
-            }
-        }
-
-        // Show inforamation in the message box
-        const nameBox = document.getElementById('name-container');
-        const recordBox = document.getElementById('records');
-        const fightBox = document.getElementById('fight');
-
-        if (foundOpponent !== null) {
-            const data = getOpponentData(foundOpponent);
-            nameBox.textContent = data.name;
-            recordBox.textContent = data.record;
-            fightBox.textContent = data.fight;
-
-        } else {
-            nameBox.textContent = ""; // Clear when no one is nearby
-            recordBox.textContent = "";
-            fightBox.textContent = "";
-        }
-    }
-
-    // music and sound fx sectionsss 
-    window.onload = function () {
-        // Play music
-        document.getElementById('music').play();
-    }
+  // If there is an opponent name, start battle
+  if (opponentName && opponentName !== "") {
+    localStorage.setItem("opponentName", opponentName);
+    window.location.href = "battle.html";
+  }
+});

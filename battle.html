@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Battle!</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        text-align: center;
+        background-image: linear-gradient(
+            rgba(0, 0, 0, 0.5),
+            rgba(0, 0, 0, 0.5)
+          ),
+          url("./bg.jpg");
+        background-position: center;
+        background-size: cover;
+        height: 90vh;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        color: white;
+      }
+      .battlefield {
+        position: relative;
+        width: 600px;
+        height: 400px;
+        margin: auto;
+        border: 3px solid #333;
+        border-radius: 12px;
+        background-color: #e0f7fa;
+      }
+      .sprite {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        background-size: cover;
+      }
+      .player-sprite {
+        bottom: 30px;
+        left: 50px;
+      }
+      .opponent-sprite {
+        top: 30px;
+        right: 50px;
+      }
+      .hp-bars {
+        margin-top: 20px;
+      }
+      a {
+        color: white;
+        background-color: red;
+        padding: 10px;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2 id="battle-title"></h2>
+    <div class="battlefield">
+      <div
+        id="playerSprite"
+        class="sprite player-sprite"
+        style="background-image: url('')"
+      ></div>
+      <div
+        id="opponentSprite"
+        class="sprite opponent-sprite"
+        style="background-image: url('')"
+      ></div>
+    </div>
+    <div class="hp-bars">
+      <p>My Pokémon HP: <span id="my-hp">100</span></p>
+      <p>Opponent HP: <span id="opponent-hp">100</span></p>
+    </div>
+
+    <p id="status"></p>
+    <button onclick="attack()">Attack</button>
+    <!-- <button onclick="heal()">Heal</button> -->
+
+    <br /><br />
+    <a href="index2.html">Back to Map</a>
+
+    <script src="battle.js"></script>
+  </body>
+</html>
