@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GAME</title>
-    <link rel="stylesheet" href="index2.css" />
-  </head>
 
-  <body>
-    <a href="./index.html"><button class="back">BACK</button></a>
-    <div class="main-container">
-      <div id="game-map"></div>
-      <!------------------------------------------------->
-      <div class="message-box">
-        <h2 id="name-container" class="name-container"></h2>
-        <h3 id="records" class="records"></h3>
-        <a href="./battle.html"><button id="fight">FIGHT</button></a>
-      </div>
-      <button onclick="finishTournament()">Finish Tournament</button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GAME</title>
+  <link rel="stylesheet" href="index2.css" />
+</head>
+
+<body>
+  <a href="./index.html"><button class="back">BACK</button></a>
+  <div class="main-container">
+    <div id="game-map"></div>
+    <!------------------------------------------------->
+    <div class="message-box">
+      <h2 id="name-container" class="name-container"></h2>
+      <h3 id="records" class="records"></h3>
+      <a href="./battle.html"><button id="fight">FIGHT</button></a>
     </div>
-    <script src="./main.js"></script>
-    <script src="./battle.js"></script>
-  </body>
+    <button class="skip" onclick="finishTournament()">Finish Tournament</button>
+  </div>
+  <script src="./main.js"></script>
+  <script src="./battle.js"></script>
+</body>
+
 </html>

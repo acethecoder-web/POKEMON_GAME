@@ -47,6 +47,7 @@ document.getElementById(
 // Initialize HP
 let myHP = 100;
 let opponentHP = 100;
+
 function attack() {
   const status = document.getElementById("status");
 
@@ -108,7 +109,7 @@ function updateRecords(result) {
   localStorage.setItem(opponentKey, JSON.stringify(opponentRecord));
   localStorage.setItem("myRecord", JSON.stringify(myRecord));
 
-  // ⬇️ Save to list of fought opponents
+  // Save to list of fought opponents
   let foughtList = JSON.parse(localStorage.getItem("foughtOpponents")) || [];
   if (!foughtList.includes(opponentName)) {
     foughtList.push(opponentName);
@@ -117,14 +118,15 @@ function updateRecords(result) {
 }
 
 function endBattle() {
-  // Remove opponentName so it's fresh for next battle
+  // Remove current opponent name
   localStorage.removeItem("opponentName");
 
-  // Wait 2 seconds before going back to map
+  // Wait 2 seconds then continue
   setTimeout(() => {
-    window.location.href = "index2.html";
+    checkIfTournamentFinished();
   }, 2000);
 }
+
 
 // tourna logic
 const allOpponents = ["Renji", "Haruko", "Takeshi", "Ayamitso"];
@@ -167,4 +169,57 @@ function updateOpponentRecords(winner, loser) {
 if (!localStorage.getItem("opponentBattlesSimulated")) {
   simulateOpponentBattles();
   localStorage.setItem("opponentBattlesSimulated", "true");
+}
+
+function determineChampion() {
+  const opponents = ["Renji", "Haruko", "Takeshi", "Ayamitso"];
+  const myRecord = JSON.parse(localStorage.getItem("myRecord")) || {
+    wins: 0,
+    losses: 0
+  };
+
+  let bestOpponent = null;
+  let bestRecord = {
+    wins: -1,
+    losses: 0
+  };
+
+  opponents.forEach(name => {
+    const record = JSON.parse(localStorage.getItem(`record_${name}`)) || {
+      wins: 0,
+      losses: 0
+    };
+    if (record.wins > bestRecord.wins) {
+      bestRecord = record;
+      bestOpponent = name;
+    }
+  });
+
+  // Compare your record to best opponent's
+  if (myRecord.wins > bestRecord.wins) {
+    localStorage.setItem("champion", "You");
+  } else if (myRecord.wins === bestRecord.wins) {
+    localStorage.setItem("champion", "Draw");
+  } else {
+    localStorage.setItem("champion", bestOpponent);
+  }
+}
+
+function checkIfTournamentFinished() {
+  const foughtList = JSON.parse(localStorage.getItem("foughtOpponents")) || [];
+  const totalPlayerFights = foughtList.length;
+
+  const totalOpponentMatches = 6;
+  const totalPlayerMatches = 4;
+  const totalExpectedMatches = totalOpponentMatches + totalPlayerMatches;
+
+  const totalRecordedMatches = totalPlayerFights + totalOpponentMatches;
+
+  if (totalRecordedMatches >= totalExpectedMatches) {
+    localStorage.setItem("tournamentFinished", "true");
+    determineChampion();
+    window.location.href = "records.html";
+  } else {
+    window.location.href = "index2.html";
+  }
 }

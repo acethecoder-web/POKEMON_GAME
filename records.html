@@ -1,114 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Battle Records & Champion</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-          url("./bg.jpg") center/cover no-repeat;
-        color: #fff;
-        text-align: center;
-        padding: 40px;
-      }
-      h1 {
-        margin-bottom: 20px;
-      }
-      table {
-        margin: auto;
-        border-collapse: collapse;
-        width: 60%;
-        background-color: rgba(255, 255, 255, 0.1);
-      }
-      th,
-      td {
-        border: 1px solid #ddd;
-        padding: 12px;
-      }
-      th {
-        background-color: rgba(0, 0, 0, 0.5);
-      }
-      tr:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-      }
-      #champion {
-        margin-top: 30px;
-        font-size: 1.5em;
-        font-weight: bold;
-        color: #ffcc00;
-      }
-      a {
-        display: inline-block;
-        margin-top: 20px;
-        text-decoration: none;
-        color: white;
-        background-color: red;
-        padding: 10px 20px;
-        border-radius: 10px;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Player Records</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>Player</th>
-          <th>Wins</th>
-          <th>Losses</th>
-        </tr>
-      </thead>
-      <tbody id="records-body">
-        <!-- Rows will be inserted here -->
-      </tbody>
-    </table>
 
-    <div id="champion">Champion:</div>
+<head>
+  <meta charset="UTF-8" />
+  <title>Battle Records & Champion</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url("./bg.jpg") center/cover no-repeat;
+      color: #fff;
+      text-align: center;
+      padding: 40px;
+    }
 
-    <a href="index2.html">Back to Map</a>
+    h1 {
+      margin-bottom: 20px;
+    }
 
-    <button onclick="resetTournament()">Reset Tournament</button>
+    table {
+      margin: auto;
+      border-collapse: collapse;
+      width: 60%;
+      background-color: rgba(255, 255, 255, 0.1);
+    }
 
-    <script>
-      if (!localStorage.getItem("tournamentFinished")) {
-        alert("Tournament is not finished yet! Please finish it first.");
-        window.location.href = "index2.html";
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 12px;
+    }
+
+    th {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    tr:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    #champion {
+      margin-top: 30px;
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #ffcc00;
+    }
+
+    a,
+    button {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: white;
+      background-color: red;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover,
+    a:hover {
+      background-color: darkred;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Player Records</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Player</th>
+        <th>Wins</th>
+        <th>Losses</th>
+      </tr>
+    </thead>
+    <tbody id="records-body">
+      <!-- Populated via JS -->
+    </tbody>
+  </table>
+
+  <div id="champion">Champion:</div>
+
+  <a href="index2.html">Back to Map</a>
+  <button onclick="resetTournament()">Reset Tournament</button>
+
+  <script>
+    // Redirect if tournament isn't finished
+    if (!localStorage.getItem("tournamentFinished")) {
+      alert("Tournament is not finished yet! Please finish it first.");
+      window.location.href = "index2.html";
+    }
+
+    const opponents = ["Renji", "Haruko", "Takeshi", "Ayamitso"];
+    const players = [...opponents, "Ace"]; // Ace = you
+
+    let champion = "None";
+    let highestWins = 0;
+
+    const tbody = document.getElementById("records-body");
+
+    players.forEach((name) => {
+      const recordKey = name === "Ace" ? "myRecord" : `record_${name}`;
+      const record = JSON.parse(localStorage.getItem(recordKey)) || {
+        wins: 0,
+        losses: 0
+      };
+
+      // Add to table
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${name}</td>
+        <td>${record.wins}</td>
+        <td>${record.losses}</td>
+      `;
+      tbody.appendChild(row);
+
+      // Determine champion
+      if (record.wins > highestWins) {
+        highestWins = record.wins;
+        champion = name;
       }
+    });
 
-      const opponents = ["Renji", "Haruko", "Takeshi", "Ayamitso"];
-      const players = [...opponents, "Ace"];
+    document.getElementById("champion").textContent = `Champion: ${champion}`;
 
-      let champion = "None";
-      let highestWins = 0;
-
-      const tbody = document.getElementById("records-body");
-
+    function resetTournament() {
       players.forEach((name) => {
-        const recordKey = name === "Ace" ? "myRecord" : `record_${name}`;
-        const record = JSON.parse(localStorage.getItem(recordKey)) || {
-          wins: 0,
-          losses: 0,
-        };
-
-        // Add row to table
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${name}</td>
-          <td>${record.wins}</td>
-          <td>${record.losses}</td>
-        `;
-        tbody.appendChild(row);
-
-        // Determine champion
-        if (record.wins > highestWins) {
-          highestWins = record.wins;
-          champion = name;
-        }
+        const key = name === "Ace" ? "myRecord" : `record_${name}`;
+        localStorage.removeItem(key);
       });
 
-      document.getElementById("champion").textContent = `Champion: ${champion}`;
-    </script>
-    <script src="./records.js"></script>
-  </body>
+      localStorage.removeItem("foughtOpponents");
+      localStorage.removeItem("champion");
+      localStorage.removeItem("tournamentFinished");
+      localStorage.removeItem("opponentBattlesSimulated");
+
+      window.location.href = "index2.html";
+    }
+  </script>
+</body>
+
 </html>
